@@ -1,0 +1,78 @@
+
+{
+    "users": [
+        {
+            "id": 1,
+            "username": "demo",
+            "alive": false,
+            "password": "on s'en fout",
+            "tags": [
+                "sport",
+                "technologie"
+            ]
+        }
+    ],
+    "missions": [
+        {
+            "id": 1,
+            "target": "Marjo",
+            "action": 2
+        }
+    ],
+    "actions": [
+        {
+            "id": 2,
+            "todo": "boire du thé",
+            "level": 1,
+            "tags": [
+                "poison",
+                "boisson"
+            ],
+            "actionType": 3
+        }
+    ],
+    "actionType": [
+        {
+            "id": 1,
+            "name": "Action"
+        },
+        {
+            "id": 2,
+            "name": "Expression"
+        },
+        {
+            "id": 3,
+            "name": "Partage"
+        }
+    ],
+    "gameplay":[
+        {
+            "id": "HEXADECIMAL VALUE",
+            "duree": "slnsf",
+            "heure de début": "zojgznkg",
+            "difficulté": 5,
+            "gamers": [
+                1,
+                3,
+                7,
+                9
+            ]
+        }
+    ],
+    "question": [
+        {
+            "id": 1,
+            "value": "QUESTION ICI",
+            "tags": [
+                "Sport",
+                "Technologie",
+                "Art"
+            ],
+            "answer": [
+                "Sport",
+                "Technologie",
+                "Art"
+            ]
+        }
+    ]
+}
