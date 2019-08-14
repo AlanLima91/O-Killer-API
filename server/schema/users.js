@@ -12,6 +12,7 @@ var UserSchema = new mongoose.Schema({
     },
     alive: {
         type: Boolean,
+        default: true,
     },
     password: {
         type: String,
