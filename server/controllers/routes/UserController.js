@@ -3,7 +3,7 @@ const User  = require('../lib/user');
 module.exports = function (app) {
     
     // POST /user
-    app.post('/user', User.signUp)
+    app.post('/user', User.addUser)
 
     // GET /users
     app.get('/users', User.getUsers)

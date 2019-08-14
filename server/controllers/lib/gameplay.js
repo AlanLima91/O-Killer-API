@@ -1,7 +1,7 @@
 const { GamePlay }     = require('../../schema/gameplay');
 const _            = require('lodash');
 const { ObjectID } = require('mongodb');
-
+const User  = require('./user');
 
 function getAllGamePlay(req,res){
 	GamePlay.find().then(gameplay => {
@@ -12,15 +12,27 @@ function getAllGamePlay(req,res){
 }
 
 function create(req,res){
-	var body = _.pick(req.body, ['duree', 'level', 'gamers']);
-	body.startTime = Date.now();
-    var gameplay = new GamePlay(body);
-
-    gameplay.save().then(content => {
-        res.status(201).send(content);
+	var body = _.pick(req.body, ['name','duree', 'level']);
+  console.log(req.body["nbJoueur"]);
+  body.gamers = [];
+  for (var i = 0; i < req.body["nbJoueur"]; i++) {
+    // Concat string and var with ${}
+    User.signUp({username:`joueur${i}`,alive:true}).then(doc => {
+      console.log(doc._id);
+      body.gamers.push(doc._id);
     }).catch(err => {
-        res.status(400).send(err);
-    })
+      return err;
+    });
+  }
+
+  body.startTime = Date.now();
+  var gameplay = new GamePlay(body);
+
+  gameplay.save().then(content => {
+      res.status(201).send(content);
+  }).catch(err => {
+      res.status(400).send(err);
+  })
 }
 
 function deleteGamePlay(req, res)

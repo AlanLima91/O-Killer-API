@@ -3,7 +3,7 @@ const _            = require('lodash');
 const { mongoose } = require('../../db/mongoose');
 const { ObjectID } = require('mongodb');
 
-function signUp(req, res)
+function addUser(req, res)
 {
     var body = _.pick(req.body, ['username', 'password', 'alive','tags']);
     var user = new User(body);
@@ -13,6 +13,14 @@ function signUp(req, res)
     }).catch(err => {
         res.status(400).send(err);
     })
+}
+
+function signUp(newBody)
+{
+  var user = new User(newBody);
+
+  let test = user.save();
+  return test;
 }
 
 function getUsers(req, res)
@@ -66,7 +74,8 @@ function deleteUser(req, res)
     }).catch(err => res.status(400).send());
 }
 
-exports.signUp      = signUp;
+exports.addUser     = addUser;
+exports.signUp     = signUp;
 exports.getUsers    = getUsers;
 exports.getUser     = getUser;
 exports.patchUser   = patchUser;
