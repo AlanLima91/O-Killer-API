@@ -4,8 +4,8 @@
     "description": "API O-Killer",
     "main": "server/server.js",
     "scripts": {
-        "start": "node server/server.js",
-        "run" : "npm i && node server/server.js"
+        "start": "nodemon server/server.js",
+        "run" : "node server/server.js"
     },
     "repository": {},
     "author": "Alexandre & Alan",
