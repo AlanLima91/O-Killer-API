@@ -1,12 +1,9 @@
 const mongoose = require('mongoose');
 
-const password = encodeURIComponent('')
+const password = encodeURIComponent('testtest6')
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://:'+password+'@:?authSource=admin');
-mongoose.set('useNewUrlParser', true);
-mongoose.set('useFindAndModify', false);
+mongoose.connect('mongodb://test:'+password+'@ds263127.mlab.com:63127/heroku_1qqv03zk');
 mongoose.set('useCreateIndex', true);
-mongoose.set('useFindAndModify', false);
 
 module.exports = {mongoose};
