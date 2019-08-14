@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-var Action = mongoose.model('Action', {
+var Actions = mongoose.model('Action', {
     todo: {
         type: String,
         required: true,
@@ -23,4 +23,4 @@ var Action = mongoose.model('Action', {
     }
 });
 
-module.exports = { Action }
+module.exports = { Actions }

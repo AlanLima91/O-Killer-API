@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
-var ActionType = mongoose.model('ActionType', {
+var ActionTypes = mongoose.model('ActionType', {
     name: String
 });
 
-module.exports = { ActionType }
+module.exports = { ActionTypes }

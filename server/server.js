@@ -6,6 +6,8 @@ var app = express();
 
 app.use(bodyParser.json());
 
+require('./controllers/controllersLoader')(app);
+
 app.get('/', (req, res) => {
     res.status(200).send('Server listening !')
 })

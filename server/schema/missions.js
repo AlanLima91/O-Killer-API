@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-var Mission = mongoose.model('Mission', {
+var Missions = mongoose.model('Mission', {
     target: {
         type: String,
         required: true,
@@ -22,4 +22,4 @@ var Mission = mongoose.model('Mission', {
     }
 });
 
-module.exports = { Mission }
+module.exports = { Missions }
