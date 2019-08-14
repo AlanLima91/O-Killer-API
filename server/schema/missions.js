@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-var Missions = mongoose.model('Mission', {
+var MissionSchema = new mongoose.Schema({
     target: {
         type: String,
         required: true,
@@ -22,4 +22,5 @@ var Missions = mongoose.model('Mission', {
     }
 });
 
-module.exports = { Missions }
+var Mission = mongoose.model('Mission', MissionSchema);
+module.exports = { Mission }

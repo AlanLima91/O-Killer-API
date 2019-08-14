@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-var Actions = mongoose.model('Action', {
+var ActionSchema = new mongoose.Schema({
     todo: {
         type: String,
         required: true,
@@ -23,4 +23,5 @@ var Actions = mongoose.model('Action', {
     }
 });
 
-module.exports = { Actions }
+var Action = mongoose.model('Action', ActionSchema);
+module.exports = { Action }

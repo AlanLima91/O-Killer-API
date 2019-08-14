@@ -5,11 +5,11 @@ const { ObjectID } = require('mongodb');
 
 function signUp(req, res)
 {
-    var body = _.pick(req.body, ['username', 'alive', 'password', 'tags']);
+    var body = _.pick(req.body, ['username', 'password', 'alive','tags']);
     var user = new User(body);
 
     user.save().then(doc => {
-        res.status(200).send(doc);
+        res.status(201).send(doc);
     }).catch(err => {
         res.status(400).send(err);
     })
@@ -62,7 +62,7 @@ function deleteUser(req, res)
     User.findByIdAndDelete(id).then(user => {
       if (!user)
         return res.status(404).send();
-      res.status(200).send({user});
+      res.status(204).send({user});
     }).catch(err => res.status(400).send());
 }
 

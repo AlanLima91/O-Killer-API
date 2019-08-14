@@ -1,6 +1,7 @@
 const User  = require('../lib/user');
 
 module.exports = function (app) {
+    
     // POST /user
     app.post('/user', User.signUp)
 
