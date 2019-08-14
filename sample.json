@@ -16,7 +16,8 @@
         {
             "id": 1,
             "target": "Marjo",
-            "action": 2
+            "action": 2,
+            "done": false
         }
     ],
     "actions": [
