@@ -10,11 +10,9 @@ var UserSchema = new mongoose.Schema({
     },
     alive: {
         type: Boolean,
-        required: true
     },
     password: {
         type: String,
-        required: true,
         minLength: 50,
         maxLength: 50,
         trim: true
@@ -27,11 +25,11 @@ var UserSchema = new mongoose.Schema({
 })
 
 // ** Méthodes d'instance **
-UserSchema.methods.toJSON = function () {
-    var user = this;
-    var userObject = user.toObject();
-    return _.pick(userObject, ['_id','username', 'alive', 'password', 'tags']);
-}
+// UserSchema.methods.toJSON = function () {
+//     var user = this;
+//     var userObject = user.toObject();
+//     return _.pick(userObject, ['_id','username', 'alive', 'password', 'tags']);
+// }
 
 var User = mongoose.model('User', UserSchema);
 module.exports = { User }
