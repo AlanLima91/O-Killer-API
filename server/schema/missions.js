@@ -1,29 +1,25 @@
 const mongoose = require('mongoose');
 
-var User = mongoose.model('User', {
-    username: {
+var Mission = mongoose.model('Mission', {
+    target: {
         type: String,
         required: true,
         minLength: 1,
         maxLength: 15,
         trim: true
     },
-    alive: {
+    done: {
         type: Boolean,
-        required: true
+        required: true,
+        default: false
     },
-    password: {
+    action: {
         type: String,
         required: true,
-        minLength: 50,
-        maxLength: 50,
+        minLength: 1,
+        maxLength: 15,
         trim: true
-    },
-    tags : [
-        {
-            name: String
-        }
-    ]
+    }
 });
 
-module.exports = { User }
+module.exports = { Mission }
