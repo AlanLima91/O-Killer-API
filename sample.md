@@ -1,4 +1,4 @@
-
+```json
 {
     "users": [
         {
@@ -77,9 +77,12 @@
         }
     ]
 }
-/*** Create GamePlay ***/
+```
+# Create GamePlay
+```json
 {
   "duree":{"value":4,"typeDuree":"heure"},
   "level":3,
   "gamers":[{"key":"test3"},{"key":"test4"}]
 }
+```
