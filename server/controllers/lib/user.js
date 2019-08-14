@@ -37,7 +37,7 @@ function getUser(req, res)
     })
 }
 
-function patchUsers(req, res)
+function patchUser(req, res)
 {
     var id = req.params.id;
     var body = _.pick(req.body, ['username', 'alive', 'password', 'tags']);
@@ -68,5 +68,5 @@ function deleteUsers(req, res)
 exports.signUp      = signUp;
 exports.getUsers    = getUsers;
 exports.getUser     = getUser;
-exports.patchUsers  = patchUsers;
+exports.patchUser   = patchUser;
 exports.deleteUsers = deleteUsers;
