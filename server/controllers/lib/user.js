@@ -1,5 +1,6 @@
 const { User }     = require('../../schema/users');
 const _            = require('lodash');
+const { mongoose } = require('../../db/mongoose');
 const { ObjectID } = require('mongodb');
 
 function signUp(req, res)

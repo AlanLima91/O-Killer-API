@@ -24,7 +24,14 @@ var UserSchema = new mongoose.Schema({
             name: String
         }
     ]
-});
+})
 
-var Users = mongoose.model('User', UserSchema);
-module.exports = { Users }
+// ** Méthodes d'instance **
+UserSchema.methods.toJSON = function () {
+    var user = this;
+    var userObject = user.toObject();
+    return _.pick(userObject, ['_id','username', 'alive', 'password', 'tags']);
+}
+
+var User = mongoose.model('User', UserSchema);
+module.exports = { User }
