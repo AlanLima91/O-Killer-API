@@ -15,7 +15,7 @@ app.get('/', (req, res) => {
 app.use(express.static(__dirname + '/public'));
 
 app.listen(process.env.PORT || 8000, () => {
-    console.log('Listening on port 8000');
+    console.log('Listening on port ' + process.env.PORT || 8000);
 })
 
 module.exports = {app}
