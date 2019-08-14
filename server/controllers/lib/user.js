@@ -53,7 +53,7 @@ function patchUser(req, res)
     }).catch(err => res.status(400).send());
 }
 
-function deleteUsers(req, res)
+function deleteUser(req, res)
 {
     var id = req.params.id;
     if (!ObjectID.isValid(id))
@@ -69,4 +69,4 @@ exports.signUp      = signUp;
 exports.getUsers    = getUsers;
 exports.getUser     = getUser;
 exports.patchUser   = patchUser;
-exports.deleteUsers = deleteUsers;
+exports.deleteUser  = deleteUser;
