@@ -1,7 +1,7 @@
 {
     "name": "okiller",
     "version": "1.0.0",
-    "description": "serveur okiller",
+    "description": "API O-Killer",
     "main": "server/server.js",
     "scripts": {
         "start": "node server/server.js"
