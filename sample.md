@@ -95,6 +95,8 @@
 
 # Norme d'écriture
 
+## Methodes
+
 Une fonction appelé via une URL devrait avoir sa `method HTTP` en `prefix` et sa `ressource` en `radical` : 
 
 ```js
@@ -114,3 +116,11 @@ public function deleteUser(req, res) {
     // For Get ALL
 }
 ```
+
+## URL
+
+* GET ALL ELEMENT : `/resources`  
+* GET ONE ELEMENT : `/resource/:id`
+* POST ELEMENT : `/resource`
+* PATCH ELEMENT : `/resource/:id`
+* DELETE ELEMENT : `/resource/:id`
