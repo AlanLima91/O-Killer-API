@@ -1,23 +1,22 @@
-const { ActionTypes }     = require('../../schema/actiontypes');
-const _            = require('lodash');
-const { ObjectID } = require('mongodb');
+const { ActionType } = require('../../schema/actiontypes');
+const _              = require('lodash');
+const { ObjectID }   = require('mongodb');
 
 
-function getAllActionTypes(req,res){
-   ActionTypes.find().then(actiontype => {
+function getActionTypes(req,res){
+   ActionType.find().then(actiontype => {
       res.status(200).send({actiontype});
    }).catch(err => {
       res.status(400).send(err);
    });
 }
 
-function create(req,res){
-	var body = _.pick(req.body, ['value', 'tags', 'answer']);
-	body.startTime = Date.now();
-   var actiontypes = new ActionTypes(body);
+function postActionType(req,res){
+	var body = _.pick(req.body, ['name']);
+   var actionType = new ActionType(body);
 
-   actiontypes.save().then(actiontype => {
-      res.status(201).send(actiontype);
+   actionType.save().then(doc => {
+      res.status(201).send(doc);
    }).catch(err => {
       res.status(400).send(err);
    })
@@ -28,7 +27,7 @@ function deleteActionType(req, res)
    var id = req.params.id;
    if (!ObjectID.isValid(id))
       return res.status(404).send();
-   ActionTypes.findByIdAndDelete(id).then(actiontype => {
+   ActionType.findByIdAndDelete(id).then(actiontype => {
       if (!actiontype)
          return res.status(404).send();
       res.status(204).send({actiontype});
@@ -40,7 +39,7 @@ function getActionType(req,res) {
    var id = req.params.id;
    if (!ObjectID.isValid(id))
       return res.status(404).send();
-   ActionTypes.findById(id).then(actiontype => {
+   ActionType.findById(id).then(actiontype => {
       if (!actiontype)
          return res.status(404).send();
       res.status(200).send({actiontype});
@@ -52,21 +51,21 @@ function getActionType(req,res) {
 function patchActionType(req, res)
 {
    var id = req.params.id;
-   var body = _.pick(req.body, ['value', 'tags', 'answer']);
+   var body = _.pick(req.body, ['name']);
   
    if (!ObjectID.isValid(id))
       return res.status(400).send();
-   ActionTypes.findByIdAndUpdate(id, {$set: body}, {new: true}).then(question => {
+   ActionType.findByIdAndUpdate(id, {$set: body}, {new: true}).then(actionType => {
       
-      if (!question) {
+      if (!actionType) {
         return res.status(404).send();
       }
-      res.status(200).send({question});
+      res.status(200).send({actionType});
    }).catch(err => res.status(400).send());
 }
 
-exports.getAllActionTypes = getAllActionTypes;
-exports.create = create;
-exports.deleteActionType = deleteActionType;
-exports.getActionType = getActionType;
-exports.patchActionType = patchActionType;
+exports.getActionTypes     = getActionTypes;
+exports.postActionType     = postActionType;
+exports.deleteActionType   = deleteActionType;
+exports.getActionType      = getActionType;
+exports.patchActionType    = patchActionType;

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const _         = require('lodash');
 
 var ActionSchema = new mongoose.Schema({
     todo: {
@@ -12,15 +13,19 @@ var ActionSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    tags:[
-        {
-            name: String
-        }
-    ],
-    actionType:{
+    tags: {
+        type: [String]
+    },
+    actionType: {
         type: String,
     }
 });
+
+ActionSchema.methods.toJSON = function () {
+    var action = this;
+    var actionObject = action.toObject();
+    return _.pick(actionObject, ['_id', 'todo', 'level', 'tags', 'actionTypes'])
+}
 
 var Action = mongoose.model('Action', ActionSchema);
 module.exports = { Action }

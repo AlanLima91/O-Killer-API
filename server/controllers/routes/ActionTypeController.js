@@ -2,9 +2,9 @@ const ActionType  = require('../lib/actiontype');
 
 module.exports = function (app) {
 
-    app.post('/actiontype', ActionType.create)
+    app.post('/actiontype', ActionType.postActionType)
 
-    app.get('/actiontype', ActionType.getAllActionTypes)
+    app.get('/actiontypes', ActionType.getActionTypes)
 
     app.get('/actiontype/:id', ActionType.getActionType)
 

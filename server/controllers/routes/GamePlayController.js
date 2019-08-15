@@ -8,9 +8,9 @@ module.exports = function (app) {
 
 	app.post('/gameplay',GamePlay.create);
 
-	app.post('/gameplay/clear',GamePlay.deleteAllGamePlay);
+	app.delete('/gameplay/clear',GamePlay.deleteAllGamePlay);
 
-	app.post('/gameplay/:id', GamePlay.deleteGamePlay);
+	app.delete('/gameplay/:id', GamePlay.deleteGamePlay);
 
 	app.patch('/gameplay/:id', GamePlay.patchGamePlay);
 }
