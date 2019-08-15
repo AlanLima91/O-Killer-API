@@ -2,9 +2,9 @@ const Question  = require('../lib/question');
 
 module.exports = function (app) {
 
-    app.post('/question', Question.create)
+    app.post('/question', Question.postQuestion)
 
-    app.get('/questions', Question.getAllQuestion)
+    app.get('/questions', Question.getQuestions)
 
     app.get('/question/:id', Question.getQuestion)
 

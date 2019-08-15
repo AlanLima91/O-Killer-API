@@ -1,20 +1,19 @@
-const { Questions }     = require('../../schema/questions');
+const { Question } = require('../../schema/questions');
 const _            = require('lodash');
 const { ObjectID } = require('mongodb');
 
 
-function getAllQuestion(req,res){
-   Questions.find().then(question => {
-      res.status(200).send({question});
+function getQuestions(req,res) {
+   Question.find().then(questions => {
+      res.status(200).send({ questions });
    }).catch(err => {
       res.status(400).send(err);
    });
 }
 
-function create(req,res){
+function postQuestion(req,res){
 	var body = _.pick(req.body, ['value', 'tags', 'answer']);
-	body.startTime = Date.now();
-   var questions = new Questions(body);
+   var questions = new Question(body);
 
    questions.save().then(question => {
       res.status(201).send(question);
@@ -28,7 +27,7 @@ function deleteQuestion(req, res)
    var id = req.params.id;
    if (!ObjectID.isValid(id))
       return res.status(404).send();
-   Questions.findByIdAndDelete(id).then(question => {
+   Question.findByIdAndDelete(id).then(question => {
       if (!question)
          return res.status(404).send();
       res.status(204).send({question});
@@ -38,9 +37,11 @@ function deleteQuestion(req, res)
 
 function getQuestion(req,res) {
    var id = req.params.id;
+
    if (!ObjectID.isValid(id))
       return res.status(404).send();
-   Questions.findById(id).then(question => {
+
+   Question.findById(id).then(question => {
       if (!question)
          return res.status(404).send();
       res.status(200).send({question});
@@ -53,10 +54,11 @@ function patchQuestion(req, res)
 {
    var id = req.params.id;
    var body = _.pick(req.body, ['value', 'tags', 'answer']);
-  
+
    if (!ObjectID.isValid(id))
       return res.status(400).send();
-   Questions.findByIdAndUpdate(id, {$set: body}, {new: true}).then(question => {
+
+   Question.findByIdAndUpdate(id, {$set: body}, {new: true}).then(question => {
       
       if (!question) {
         return res.status(404).send();
@@ -65,8 +67,8 @@ function patchQuestion(req, res)
    }).catch(err => res.status(400).send());
 }
 
-exports.getAllQuestion = getAllQuestion;
-exports.create = create;
+exports.getQuestions = getQuestions;
+exports.postQuestion = postQuestion;
 exports.deleteQuestion = deleteQuestion;
 exports.getQuestion = getQuestion;
 exports.patchQuestion = patchQuestion;
