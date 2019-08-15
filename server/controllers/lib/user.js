@@ -15,12 +15,14 @@ function addUser(req, res)
     })
 }
 
-function signUp(newBody)
+async function signUp(newBody,data)
 {
   var user = new User(newBody);
-
-  let test = user.save();
-  return test;
+  let id;
+  await user.save().then(doc => {
+      id = doc._id;
+  });
+  return id;
 }
 
 function getUsers(req, res)

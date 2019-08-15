@@ -13,25 +13,35 @@ function getAllGamePlay(req,res){
 
 function create(req,res){
 	var body = _.pick(req.body, ['name','duree', 'level']);
-  console.log(req.body["nbJoueur"]);
-  body.gamers = [];
-  for (var i = 0; i < req.body["nbJoueur"]; i++) {
-    // Concat string and var with ${}
-    User.signUp({username:`joueur${i}`,alive:true}).then(doc => {
-      console.log(doc._id);
-      body.gamers.push(doc._id);
+  
+  let promise = getListNewUserId(req.body["nbJoueur"]);
+  promise.then(data => {
+    body.gamers = data;
+    body.startTime = Date.now();
+    var gameplay = new GamePlay(body);
+
+    gameplay.save().then(content => {
+        res.status(201).send(content);
     }).catch(err => {
-      return err;
-    });
-  }
+        res.status(400).send(err);
+    })
+  });
+}
 
-  body.startTime = Date.now();
-  var gameplay = new GamePlay(body);
-
-  gameplay.save().then(content => {
-      res.status(201).send(content);
-  }).catch(err => {
-      res.status(400).send(err);
+function getListNewUserId(nbJoueur){
+  return new Promise((resolve, reject) => {
+    let gamers = [];
+    let y=0;
+    for (var i = 0; i < nbJoueur; i++) {
+      // Concat string and var with ${}
+      let id = User.signUp({username:`joueur${i}`,alive:true}).then(id => {
+        gamers.push(id);
+        y++;
+        if (y == nbJoueur) {
+          resolve(gamers);
+        }
+      });
+    }
   })
 }
 
@@ -47,6 +57,14 @@ function deleteGamePlay(req, res)
     }).catch(err => res.status(400).send());
 }
 
+function deleteAllGamePlay(req, res)
+{
+    GamePlay.deleteMany({}).then(gameplay => {
+      if (!gameplay)
+        return res.status(404).send();
+      res.status(204).send({gameplay});
+    }).catch(err => res.status(400).send());
+}
 
 function getGamePlay(req,res) {
 	var id = req.params.id;
@@ -82,3 +100,4 @@ exports.create = create;
 exports.deleteGamePlay = deleteGamePlay;
 exports.getGamePlay = getGamePlay;
 exports.patchGamePlay = patchGamePlay;
+exports.deleteAllGamePlay = deleteAllGamePlay;
