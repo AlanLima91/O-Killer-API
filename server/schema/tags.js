@@ -9,4 +9,4 @@ var TagSchema = new mongoose.Schema({
 })
 
 var Tag = mongoose.model('Tag', TagSchema);
-module.exports(Tag);
+module.exports = { Tag };

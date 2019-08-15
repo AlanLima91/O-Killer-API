@@ -28,7 +28,7 @@ async function signUp(newBody,data)
 function getUsers(req, res)
 {
     User.find().then(users => {
-        res.status(200).send({users});
+        res.status(200).send({ users });
       }).catch(err => {
         res.status(400).send(err);
       })
@@ -42,7 +42,7 @@ function getUser(req, res)
     User.findById(id).then(user => {
       if (!user)
         return res.status(404).send();
-      res.status(200).send({user});
+      res.status(200).send({ user });
     }).catch(err => {
       res.status(400).send(err);
     })

@@ -2,19 +2,25 @@
 {
     "users": [
         {
-            "id": 1,
+            "_id": 1,
             "username": "demo",
             "alive": false,
             "password": "on s'en fout",
             "tags": [
-                "sport",
-                "technologie"
+                "5d5436e6df81b529464f3de1",
+                "5d9464f3d5436e6de1f81b52"
             ]
+        }
+    ],
+    "tags": [
+        {
+            "_id": "5d5436e6df81b529464f3de1",
+            "name": "example"
         }
     ],
     "missions": [
         {
-            "id": 1,
+            "_id": 1,
             "target": "Marjo",
             "action": 2,
             "done": false
@@ -22,7 +28,7 @@
     ],
     "actions": [
         {
-            "id": 2,
+            "_id": 2,
             "todo": "boire du thé",
             "level": 1,
             "tags": [
@@ -34,21 +40,21 @@
     ],
     "actionType": [
         {
-            "id": 1,
+            "_id": 1,
             "name": "Action"
         },
         {
-            "id": 2,
+            "_id": 2,
             "name": "Expression"
         },
         {
-            "id": 3,
+            "_id": 3,
             "name": "Partage"
         }
     ],
     "gameplay":[
         {
-            "id": "HEXADECIMAL VALUE",
+            "_id": "HEXADECIMAL VALUE",
             "duree": "slnsf",
             "heure de début": "zojgznkg",
             "difficulté": 5,
@@ -62,7 +68,7 @@
     ],
     "question": [
         {
-            "id": 1,
+            "_id": 1,
             "value": "QUESTION ICI",
             "tags": [
                 "Sport",
@@ -84,5 +90,27 @@
   "duree":{"value":4,"typeDuree":"heure"},
   "level":3,
   "gamers":[{"key":"test3"},{"key":"test4"}]
+}
+```
+
+# Norme d'écriture
+
+Une fonction appelé via une URL devrait avoir sa `method HTTP` en `prefix` et sa `ressource` en `radical` : 
+
+```js
+public function postUser(req, res) {
+    // ...
+}
+public function getUsers(req, res) {
+    // For Get ALL
+}
+public function getUser(req, res) {
+    // For Get ONE
+}
+public function patchUser(req, res) {
+    // For Get ALL
+}
+public function deleteUser(req, res) {
+    // For Get ALL
 }
 ```

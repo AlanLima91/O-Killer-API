@@ -19,7 +19,6 @@ var ActionSchema = new mongoose.Schema({
     ],
     actionType:{
         type: String,
-        required: true,
     }
 });
 
