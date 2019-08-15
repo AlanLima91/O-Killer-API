@@ -4,8 +4,12 @@ var Schema = mongoose.Schema;
 var QuestionSchema = new Schema([
 {
     value:String,
-    tags:[{name:String}],
-    answer:[{name:String}]
+    tags: {
+        type:[String]
+    },
+    answer:{
+        type:[String]
+    }
 }
 ]);
 

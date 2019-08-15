@@ -2,9 +2,9 @@ const Tag  = require('../lib/tag');
 
 module.exports = function (app) {
 
-    app.post('/tag', Tag.create)
+    app.post('/tag', Tag.postTag)
 
-    app.get('/tags', Tag.getAllTag)
+    app.get('/tags', Tag.getTags)
 
     app.get('/tag/:id', Tag.getTag)
 

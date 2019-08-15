@@ -35,7 +35,6 @@ UserSchema.methods.toJSON = function () {
 // mongoose middleware
 UserSchema.pre('save', function (next) {
     var user = this; //context binding
-    console.log(user);
 
     // détecte l'insertion ou mise à jour d'un nouveau password
     if (user.isModified('password')) {
@@ -50,6 +49,8 @@ UserSchema.pre('save', function (next) {
         next()
     }
 })
-
+UserSchema.post('save', function (next) {
+    return this._id;
+})
 var User = mongoose.model('User', UserSchema);
 module.exports = { User }
