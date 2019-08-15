@@ -92,3 +92,25 @@
   "gamers":[{"key":"test3"},{"key":"test4"}]
 }
 ```
+
+# Norme d'écriture
+
+Une fonction appelé via une URL devrait avoir sa `method HTTP` en `prefix` et sa `ressource` en `radical` : 
+
+```js
+public function postUser(req, res) {
+    // ...
+}
+public function getUsers(req, res) {
+    // For Get ALL
+}
+public function getUser(req, res) {
+    // For Get ONE
+}
+public function patchUser(req, res) {
+    // For Get ALL
+}
+public function deleteUser(req, res) {
+    // For Get ALL
+}
+```
