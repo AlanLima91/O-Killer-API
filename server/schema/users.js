@@ -50,5 +50,9 @@ UserSchema.pre('save', function (next) {
     }
 })
 
+UserSchema.post('save', function (next) {
+    return this._id;
+})
+
 var User = mongoose.model('User', UserSchema);
 module.exports = { User }

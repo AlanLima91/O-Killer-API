@@ -6,6 +6,8 @@ module.exports = function (app) {
 
 	app.get('/gameplay/:id', Gameplay.getGameplay);
 
+	app.get('/gameplay/:id/gamers', Gameplay.getGamers);
+
 	app.post('/gameplay',Gameplay.postGameplay);
 
 	app.delete('/gameplay/clear',Gameplay.deleteAllGameplay);
