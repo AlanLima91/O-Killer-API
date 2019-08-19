@@ -17,5 +17,5 @@ var GamePlaySchema = new Schema([
     }
 ]);
 
-var GamePlay = mongoose.model("GamePlay",GamePlaySchema);
-module.exports = {GamePlay};
+var Gameplay = mongoose.model("GamePlay",GamePlaySchema);
+module.exports = {Gameplay};

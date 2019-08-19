@@ -1,24 +1,24 @@
-const { GamePlay }     = require('../../schema/gameplay');
+const { Gameplay }     = require('../../schema/gameplay');
 const _            = require('lodash');
 const { ObjectID } = require('mongodb');
 const User  = require('./user');
 
-function getAllGamePlay(req,res){
-	GamePlay.find().then(gameplay => {
+function getGameplays(req,res){
+	Gameplay.find().then(gameplay => {
         res.status(200).send({gameplay});
 	}).catch(err => {
 		res.status(400).send(err);
 	});
 }
 
-function create(req,res){
-	var body = _.pick(req.body, ['name','duree', 'level']);
+function postGameplay(req,res){
+	var body = _.pick(req.body, ['name','duree', 'level', 'startTime']);
   
   let promise = getListNewUserId(req.body["nbJoueur"]);
   promise.then(data => {
     body.gamers = data;
     body.startTime = Date.now();
-    var gameplay = new GamePlay(body);
+    var gameplay = new Gameplay(body);
 
     gameplay.save().then(content => {
         res.status(201).send(content);
@@ -45,32 +45,32 @@ function getListNewUserId(nbJoueur){
   })
 }
 
-function deleteGamePlay(req, res)
+function deleteGameplay(req, res)
 {
     var id = req.params.id;
     if (!ObjectID.isValid(id))
       return res.status(404).send();
-    GamePlay.findByIdAndDelete(id).then(gameplay => {
+    Gameplay.findByIdAndDelete(id).then(gameplay => {
       if (!gameplay)
         return res.status(404).send();
       res.status(204).send({gameplay});
     }).catch(err => res.status(400).send());
 }
 
-function deleteAllGamePlay(req, res)
+function deleteAllGameplay(req, res)
 {
-    GamePlay.deleteMany({}).then(gameplay => {
+    Gameplay.deleteMany({}).then(gameplay => {
       if (!gameplay)
         return res.status(404).send();
       res.status(204).send({gameplay});
     }).catch(err => res.status(400).send());
 }
 
-function getGamePlay(req,res) {
+function getGameplay(req,res) {
 	var id = req.params.id;
     if (!ObjectID.isValid(id))
       	return res.status(404).send();
-    GamePlay.findById(id).then(gameplay => {
+    Gameplay.findById(id).then(gameplay => {
 		if (!gameplay)
 			return res.status(404).send();
 		res.status(200).send({gameplay});
@@ -79,14 +79,14 @@ function getGamePlay(req,res) {
     })
 }
 
-function patchGamePlay(req, res)
+function patchGameplay(req, res)
 {
     var id = req.params.id;
-    var body = _.pick(req.body, ['duree', 'level', 'gamers']);
+    var body = _.pick(req.body, ['name', 'duree', 'level', 'gamers']);
   
     if (!ObjectID.isValid(id))
       	return res.status(400).send();
-    GamePlay.findByIdAndUpdate(id, {$set: body}, {new: true}).then(gameplay => {
+    Gameplay.findByIdAndUpdate(id, {$set: body}, {new: true}).then(gameplay => {
       
       if (!gameplay) {
         return res.status(404).send();
@@ -95,9 +95,9 @@ function patchGamePlay(req, res)
     }).catch(err => res.status(400).send());
 }
 
-exports.getAllGamePlay = getAllGamePlay;
-exports.create = create;
-exports.deleteGamePlay = deleteGamePlay;
-exports.getGamePlay = getGamePlay;
-exports.patchGamePlay = patchGamePlay;
-exports.deleteAllGamePlay = deleteAllGamePlay;
+exports.getGameplays      = getGameplays;
+exports.postGameplay      = postGameplay;
+exports.deleteGameplay    = deleteGameplay;
+exports.getGameplay       = getGameplay;
+exports.patchGameplay     = patchGameplay;
+exports.deleteAllGameplay = deleteAllGameplay;
