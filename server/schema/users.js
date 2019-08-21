@@ -37,7 +37,7 @@ UserSchema.pre('save', function (next) {
     var user = this; //context binding
 
     // détecte l'insertion ou mise à jour d'un nouveau password
-    if (user.isModified('password')) {
+    if (user.isModified('password' || this.isNew)) {
         // cryptage
         bcrypt.genSalt(10, (err, salt) => {
             bcrypt.hash(user.password, salt, (err, hash) => {
@@ -53,6 +53,11 @@ UserSchema.pre('save', function (next) {
 UserSchema.post('save', function (next) {
     return this._id;
 })
+
+UserSchema.methods.comparePassword = function(password) {
+    let user = this;
+    return bcrypt.compare(password, user.password);
+}
 
 var User = mongoose.model('User', UserSchema);
 module.exports = { User }

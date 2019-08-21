@@ -1,84 +1,100 @@
-const { User }     = require('../../schema/users');
-const _            = require('lodash');
+const { User } = require('../../schema/users');
+const _ = require('lodash');
 const { ObjectID } = require('mongodb');
+const bcrypt = require('bcryptjs');
 
 function getUsers(req, res) {
-    User.find().then(users => {
-      res.status(200).send({ users });
-    }).catch(err => {
-      res.status(400).send(err);
-    })
+  User.find().then(users => {
+    res.status(200).send({ users });
+  }).catch(err => {
+    res.status(400).send(err);
+  })
 }
 
-function addUser(req, res)
-{
-    var body = _.pick(req.body, ['username', 'password', 'alive','tags']);
-    var user = new User(body);
+function addUser(req, res) {
+  var body = _.pick(req.body, ['username', 'password', 'alive', 'tags']);
+  var user = new User(body);
 
-    user.save().then(doc => {
-        res.status(201).send(doc);
-    }).catch(err => {
-        res.status(400).send(err);
-    })
+  user.save().then(doc => {
+    res.status(201).send(doc);
+  }).catch(err => {
+    res.status(400).send(err);
+  });
 }
 
-async function signUp(newBody, data)
-{
+async function signUp(newBody, data) {
   var user = new User(newBody);
   let id;
   await user.save().then(doc => {
-      id = doc._id;
+    id = doc._id;
   });
   return id;
 }
 
-function getUser(req, res)
-{
-    var id = req.params.id;
-  
-    if (!ObjectID.isValid(id))
+function getUser(req, res) {
+  var id = req.params.id;
+
+  if (!ObjectID.isValid(id))
+    return res.status(404).send();
+
+  User.findById(id).then(user => {
+    if (!user)
       return res.status(404).send();
-  
-    User.findById(id).then(user => {
-      if (!user)
-        return res.status(404).send();
-      res.status(200).send({ user });
-    }).catch(err => {
-      res.status(400).send(err);
-    })
+    res.status(200).send({ user });
+  }).catch(err => {
+    res.status(400).send(err);
+  });
 }
 
-function patchUser(req, res)
-{
-    var id = req.params.id;
-    var body = _.pick(req.body, ['username', 'alive', 'password', 'tags']);
-  
-    if (!ObjectID.isValid(id))
-      return res.status(400).send();
-    User.findByIdAndUpdate(id, {$set: body}, {new: true}).then(user => {
-      
-      if (!user) {
-        return res.status(404).send();
+function patchUser(req, res) {
+  var id = req.params.id;
+  var body = _.pick(req.body, ['username', 'alive', 'password', 'tags']);
+
+  if (!ObjectID.isValid(id))
+    return res.status(400).send();
+  User.findByIdAndUpdate(id, { $set: body }, { new: true }).then(user => {
+
+    if (!user) {
+      return res.status(404).send();
+    }
+    res.status(200).send({ user });
+  }).catch(err => res.status(400).send());
+}
+
+function deleteUser(req, res) {
+  var id = req.params.id;
+  if (!ObjectID.isValid(id))
+    return res.status(404).send();
+  User.findByIdAndDelete(id).then(user => {
+    if (!user)
+      return res.status(404).send('Not Found');
+    res.status(204).send({ user });
+  }).catch(err => res.status(400).send('Error when we try to delete'));
+}
+
+async function getLogin(req, res) {
+  try {
+    let password = req.body.password;
+    let username = req.body.username;
+    let user = await User.findOne({ username: username });
+    if (!user) {
+      return res.status(400).send({ error: "Bad credentials" });
+    }
+    user.comparePassword(password).then(function (value) {
+      if (value == true) {
+        return res.status(201).send({ user });
       }
-      res.status(200).send({user});
-    }).catch(err => res.status(400).send());
-}
+      return res.status(400).send({ error: "Bad credentials" });
+    })
+  } catch (err) {
+    return res.status(400).send({ error: "Bad credentials" });
+  }
+};
 
-function deleteUser(req, res)
-{
-    var id = req.params.id;
-    if (!ObjectID.isValid(id))
-      return res.status(404).send();
-    User.findByIdAndDelete(id).then(user => {
-      if (!user)
-        return res.status(404).send();
-      res.status(204).send({user});
-    }).catch(err => res.status(400).send());
-}
-
-exports.addUser     = addUser;
-exports.signUp     = signUp;
-exports.getUsers    = getUsers;
-exports.getUser     = getUser;
-exports.patchUser   = patchUser;
-exports.deleteUser  = deleteUser;
+exports.addUser = addUser;
+exports.signUp = signUp;
+exports.getUsers = getUsers;
+exports.getUser = getUser;
+exports.patchUser = patchUser;
+exports.deleteUser = deleteUser;
+exports.getLogin = getLogin;
