@@ -1,21 +1,34 @@
-const mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+const mongoose  = require('mongoose');
+const _         = require('lodash');
 
-var GamePlaySchema = new Schema([
-    {
-        duree: {
-            value:Number,
-            typeDuree:String,
+var GameplaySchema = new mongoose.Schema({
+        name: {
+            type: String
         },
-        startTime:Date,
-        level:Number,
-        gamers:[
-            {
-                key:String
-            }
-        ]
+        duree: {
+            type: String
+        },
+        startTime: {
+            type: Date
+        },
+        level: {
+            type: Number
+        },
+        gamers: {
+            type: [String]
+        }
     }
-]);
+);
 
-var Gameplay = mongoose.model("GamePlay",GamePlaySchema);
+// ** Méthodes d'instance **
+GameplaySchema.methods.toJSON = function () {
+    var gameplay = this;
+    var gameplayObject = gameplay.toObject();
+    return _.pick(gameplayObject, ['_id', 'name', 'duree', 'startTime', 'level', 'gamers']);
+}
+
+
+
+
+var Gameplay = mongoose.model("Gameplay",GameplaySchema);
 module.exports = {Gameplay};

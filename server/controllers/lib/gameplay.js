@@ -12,7 +12,7 @@ function getGameplays(req, res) {
 }
 
 function postGameplay(req, res) {
-  var body = _.pick(req.body, ['name', 'duree', 'level', 'startTime']);
+  var body = _.pick(req.body, ['name', 'duree', 'level', 'startTime', 'gamers']);
 
   let promise = getListNewUserId(req.body["nbJoueur"]);
   promise.then(data => {
@@ -34,8 +34,8 @@ function getListNewUserId(nbJoueur) {
     let y = 0;
     for (var i = 0; i < nbJoueur; i++) {
       // Concat string and var with ${}
-      let id = User.signUp({ username: `joueur${i}`, alive: true }).then(id => {
-        gamers.push(id);
+      User.signUp({ username: `joueur${i}` }).then(id => {
+        gamers[y] = id;
         y++;
         if (y == nbJoueur) {
           resolve(gamers);
