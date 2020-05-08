@@ -6,8 +6,15 @@ var UserSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true,
-        minLength: 1,
-        maxLength: 15,
+        unique:true,
+        min: 1,
+        max: 25,
+        trim: true
+    },
+    email: {
+        type: String,
+        unique: true,
+        required: true,
         trim: true
     },
     alive: {
@@ -16,14 +23,13 @@ var UserSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        minLength: 50,
-        maxLength: 50,
-        trim: true
+        required:true,
+        max: 100,
     },
     tags : {
         type: [String]
     }
-})
+},{timestamps: true})
 
 // ** Méthodes d'instance **
 UserSchema.methods.toJSON = function () {
@@ -50,14 +56,43 @@ UserSchema.pre('save', function (next) {
     }
 })
 
-UserSchema.post('save', function (next) {
-    return this._id;
-})
-
 UserSchema.methods.comparePassword = function(password) {
     let user = this;
     return bcrypt.compare(password, user.password);
 }
 
+
+UserSchema.methods.generateJWT = function() {
+    const today = new Date();
+    const expirationDate = new Date(today);
+    expirationDate.setDate(today.getDate() + 7);
+
+    let payload = {
+        id: this._id,
+        email: this.email,
+        username: this.username,
+    };
+
+    return jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: parseInt(expirationDate.getTime() / 1000, 10)
+    });
+};
+
+UserSchema.methods.validateJWT = function(token) {
+    try{
+        const verified = jwt.verify(token, process.env.JWT_SECRET);
+        const isValid = (
+            verified.id === this._id.toString() &&
+            verified.email === this.email &&
+            verified.username === this.username
+        );
+        return isValid;
+    } catch(error){
+        if (error.name == "TokenExpiredError") {
+          return true;
+        }
+        return false;
+    }
+}
 var User = mongoose.model('User', UserSchema);
 module.exports = { User }

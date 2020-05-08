@@ -3,92 +3,93 @@ const _ = require('lodash');
 const { ObjectID } = require('mongodb');
 const bcrypt = require('bcryptjs');
 
-function getUsers(req, res) {
-  User.find().then(users => {
-    res.status(200).send({ users });
-  }).catch(err => {
-    res.status(400).send(err);
-  })
+async function getUsers(req, res) {
+    try {
+        const users = await User.find();
+        res.status(200).send({ users });
+    } catch (error) {
+        res.status(400).send(error);
+    }
 }
 
-function addUser(req, res) {
-  var body = _.pick(req.body, ['username', 'password', 'alive', 'tags']);
-  var user = new User(body);
+async function addUser(req, res) {
+    try {
+        var body = _.pick(req.body, ['username', 'password', 'alive', 'tags']);
 
-  user.save().then(doc => {
-    res.status(201).send(doc);
-  }).catch(err => {
-    res.status(400).send(err);
-  });
+        var user = new User(body);
+        await user.save();
+
+        res.status(201).send(user);
+    } catch (error) {
+        res.status(400).send(error);
+    }
 }
 
 async function signUp(newBody, data) {
-  var user = new User(newBody);
-  let id;
-  await user.save().then(doc => {
-    id = doc._id;
-  });
-  return id;
-}
-
-function getUser(req, res) {
-  var id = req.params.id;
-
-  if (!ObjectID.isValid(id))
-    return res.status(404).send();
-
-  User.findById(id).then(user => {
-    if (!user)
-      return res.status(404).send();
-    res.status(200).send({ user });
-  }).catch(err => {
-    res.status(400).send(err);
-  });
-}
-
-function patchUser(req, res) {
-  var id = req.params.id;
-  var body = _.pick(req.body, ['username', 'alive', 'password', 'tags']);
-
-  if (!ObjectID.isValid(id))
-    return res.status(400).send();
-  User.findByIdAndUpdate(id, { $set: body }, { new: true }).then(user => {
-
-    if (!user) {
-      return res.status(404).send();
+    try {
+        var user = new User(newBody);
+        await user.save();
+        return user._id;
+    } catch (error) {
+        return error;
     }
-    res.status(200).send({ user });
-  }).catch(err => res.status(400).send());
 }
 
-function deleteUser(req, res) {
-  var id = req.params.id;
-  if (!ObjectID.isValid(id))
-    return res.status(404).send();
-  User.findByIdAndDelete(id).then(user => {
-    if (!user)
-      return res.status(404).send('Not Found');
-    res.status(204).send({ user });
-  }).catch(err => res.status(400).send('Error when we try to delete'));
-}
+async function getUser(req, res) {
+    try {
+        var id = req.params.id;
+        if (!ObjectID.isValid(id)) return res.status(404).send();
 
-async function getLogin(req, res) {
-  try {
-    let password = req.body.password;
-    let username = req.body.username;
-    let user = await User.findOne({ username: username });
-    if (!user) {
-      return res.status(400).send({ error: "Bad credentials" });
+        const user = await User.findById(id);
+        if (!user) return res.status(404).send();
+
+        res.status(200).send({ user });
+    } catch (error) {
+        res.status(400).send(error);
     }
-    user.comparePassword(password).then(function (value) {
-      if (value == true) {
-        return res.status(201).send({ user });
-      }
-      return res.status(400).send({ error: "Bad credentials" });
-    })
-  } catch (err) {
-    return res.status(400).send({ error: "Bad credentials" });
-  }
+}
+
+async function patchUser(req, res) {
+    try {
+        var id = req.params.id;
+        var body = _.pick(req.body, ['username', 'alive', 'password', 'tags']);
+        if (!ObjectID.isValid(id)) return res.status(400).send();
+
+        const user = await User.findByIdAndUpdate(id, { $set: body }, { new: true });
+        if (!user) return res.status(404).send();
+        
+        res.status(200).send({ user });
+    } catch (error) {
+        res.status(400).send(error);
+    }
+}
+
+async function deleteUser(req, res) {
+    try {
+        var id = req.params.id;
+        if (!ObjectID.isValid(id)) return res.status(404).send();
+        const user = await User.findByIdAndDelete(id);
+        if (!user) return res.status(404).send('Not Found');
+        res.status(204).send({ user });
+    } catch (error) {
+        res.status(400).send(error);
+    }
+}
+
+async function login(req, res) {
+    try {
+        const { password,username } = req.body.password;
+
+        let user = await User.findOne({ username: username });
+        if (!user) return res.status(400).send({ error: "Bad credentials" });
+        
+        // validate password
+        if (!user.comparePassword(password)) return res.status(401).json({message: 'Mot de passe ou mail incorrect'});
+        
+        res.status(201).send({ token: user.generateJWT(),user:user });
+    } catch (error) {
+        res.status(400).send(error);
+    }
 };
 
 exports.addUser = addUser;
@@ -97,4 +98,4 @@ exports.getUsers = getUsers;
 exports.getUser = getUser;
 exports.patchUser = patchUser;
 exports.deleteUser = deleteUser;
-exports.getLogin = getLogin;
+exports.login = login;

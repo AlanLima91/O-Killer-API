@@ -3,68 +3,69 @@ const _            = require('lodash');
 const { ObjectID } = require('mongodb');
 
 
-function getQuestions(req,res) {
-   Question.find().then(questions => {
-      res.status(200).send({ questions });
-   }).catch(err => {
-      res.status(400).send(err);
-   });
+async function getQuestions(req,res) {
+    try {
+        const questions  = await Question.find();
+        res.status(200).send({ questions });
+    } catch (error) {
+        res.status(400).send(error);
+    }
 }
 
-function postQuestion(req,res){
-	var body = _.pick(req.body, ['value', 'tags', 'answer']);
-   var questions = new Question(body);
+async function postQuestion(req,res){
+    try {
+    	var body = _.pick(req.body, ['value', 'tags', 'answer']);
+        var questions = new Question(body);
 
-   questions.save().then(question => {
-      res.status(201).send(question);
-   }).catch(err => {
-      res.status(400).send(err);
-   })
+        await questions.save();
+        res.status(201).send(question);
+    } catch (error) {
+        res.status(400).send(error);
+    }   
 }
 
-function deleteQuestion(req, res)
-{
-   var id = req.params.id;
-   if (!ObjectID.isValid(id))
-      return res.status(404).send();
-   Question.findByIdAndDelete(id).then(question => {
-      if (!question)
-         return res.status(404).send();
-      res.status(204).send({question});
-   }).catch(err => res.status(400).send());
+async function deleteQuestion(req, res) {
+    try {
+        var id = req.params.id;
+        if (!ObjectID.isValid(id)) return res.status(404).send();
+
+        const question = await Question.findByIdAndDelete(id);
+        if (!question) return res.status(404).send();
+
+        res.status(204).send({question});
+    } catch (error) {
+        res.status(400).send(error);
+    }   
 }
 
 
-function getQuestion(req,res) {
-   var id = req.params.id;
+async function getQuestion(req,res) {
+    try {
+        var id = req.params.id;
+        if (!ObjectID.isValid(id)) return res.status(404).send();
 
-   if (!ObjectID.isValid(id))
-      return res.status(404).send();
+        const question = await Question.findById(id);
+        if (!question) return res.status(404).send();
 
-   Question.findById(id).then(question => {
-      if (!question)
-         return res.status(404).send();
-      res.status(200).send({question});
-   }).catch(err => {
-      res.status(400).send(err);
-   })
+        res.status(200).send({question});
+    } catch (error) {
+        res.status(400).send(error);
+    }   
 }
 
-function patchQuestion(req, res)
-{
-   var id = req.params.id;
-   var body = _.pick(req.body, ['value', 'tags', 'answer']);
+async function patchQuestion(req, res) {
+    try {
+        var id = req.params.id;
+        var body = _.pick(req.body, ['value', 'tags', 'answer']);
+        if (!ObjectID.isValid(id)) return res.status(400).send();
 
-   if (!ObjectID.isValid(id))
-      return res.status(400).send();
-
-   Question.findByIdAndUpdate(id, {$set: body}, {new: true}).then(question => {
-      
-      if (!question) {
-        return res.status(404).send();
-      }
-      res.status(200).send({question});
-   }).catch(err => res.status(400).send());
+        const question = await Question.findByIdAndUpdate(id, {$set: body}, {new: true})
+        if (!question) return res.status(404).send();
+        
+        res.status(200).send({question});
+    } catch (error) {
+        res.status(400).send(error);
+    }
 }
 
 exports.getQuestions = getQuestions;

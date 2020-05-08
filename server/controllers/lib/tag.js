@@ -3,65 +3,67 @@ const _            = require('lodash');
 const { mongoose } = require('../../db/mongoose');
 const { ObjectID } = require('mongodb');
 
-function postTag(req, res) {
-    var body = _.pick(req.body, ['name']);
-    var tag = new Tag(body);
-
-    tag.save().then(doc => {
-        res.status(201).send(doc);
-    }).catch(err => {
-        res.status(400).send(err);
-    })
+async function postTag(req, res) {
+    try {
+        var body = _.pick(req.body, ['name']);
+        var tag = new Tag(body);
+        await tag.save();
+        res.status(201).send(tag);
+    } catch (error) {
+        res.status(400).send(error);
+    }
 }
 
-function getTags(req, res) {
-    Tag.find().then(tags => {
+async function getTags(req, res) {
+    try {
+        const tags = await Tag.find();
         res.status(200).send({tags});
-    }).catch(err => {
-        res.status(400).send(err);
-    })
+    } catch (error) {
+        res.status(400).send(error);
+    }
 }
 
-function getTag(req, res) {
-    var id = req.params.id;
-    if (!ObjectID.isValid(id))
-        return res.status(404).send();
-    Tag.findById(id).then(tag => {
-        if (!tag)
-            return res.status(404).send();
+async function getTag(req, res) {
+    try {
+        var id = req.params.id;
+        if (!ObjectID.isValid(id)) return res.status(404).send();
+
+        const tag = await Tag.findById(id);
+        if (!tag) return res.status(404).send();
+
         res.status(200).send({ tag })
-    }).catch(err => {
-        res.status(400).send(err);
-    })
+    } catch (error) {
+        res.status(400).send(error);
+    }
 }
 
-function patchTag(req, res) {
-    var id = req.params.id;
+async function patchTag(req, res) {
+    try {
+        var id = req.params.id;
+        var body = _.pick(req.body, ['name']);
+        if (!ObjectID.isValid(id)) return res.status(400).send();
 
-    var body = _.pick(req.body, ['name']);
-  
-    if (!ObjectID.isValid(id))
-      return res.status(400).send();
-    Tag.findByIdAndUpdate(id, {$set: body}, {new: true}).then(tag => {
-      
-      if (!tag) {
-        return res.status(404).send();
-      }
-      res.status(200).send({tag});
-    }).catch(err => res.status(400).send());
+        const tag  = await Tag.findByIdAndUpdate(id, {$set: body}, {new: true});
+        if (!tag) return res.status(404).send();
+
+        res.status(200).send({tag});
+    } catch (error) {
+        res.status(400).send(error);
+    }
 }
 
-function deleteTag(req, res) {
+async function deleteTag(req, res) {
+    try {
+        var id = req.params.id;
+        if (!ObjectID.isValid(id)) return res.status(404).send();
 
-    var id = req.params.id;
+        const tag = await Tag.findByIdAndDelete(id);
+        if (!tag) return res.status(404).send();
 
-    if (!ObjectID.isValid(id))
-      return res.status(404).send();
-    Tag.findByIdAndDelete(id).then(tag => {
-      if (!tag)
-        return res.status(404).send();
-      res.status(204).send({tag});
-    }).catch(err => res.status(400).send());
+        res.status(204).send({tag});
+    } catch (error) {
+        res.status(400).send(error);
+    }
 }
 
 exports.postTag     = postTag;

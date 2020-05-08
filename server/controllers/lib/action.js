@@ -3,67 +3,73 @@ const _            = require('lodash');
 const { mongoose } = require('../../db/mongoose');
 const { ObjectID } = require('mongodb');
 
-function postAction(req, res)
-{
-    var body = _.pick(req.body, ['_id', 'todo', 'level', 'tags', 'actionType']);
-    var action = new Action(body);
+async function postAction(req, res) {
+    try {
+        var body = _.pick(req.body, ['_id', 'todo', 'level', 'tags', 'actionType']);
+        var action = new Action(body);
 
-    action.save().then(doc => {
-        res.status(200).send(doc);
-    }).catch(err => {
-        res.status(400).send(err);
-    })
+        await action.save();
+    
+        res.status(200).send({action});
+    } catch (error) {
+        res.status(400).send(error);
+    }
 }
 
-function getActions(req, res)
-{
-    Action.find().then(actions => {
-        res.status(200).send({actions});
-      }).catch(err => {
-        res.status(400).send(err);
-      })
-}
-
-function getAction(req, res)
-{
-    var id = req.params.id;
-    if (!ObjectID.isValid(id))
-      return res.status(404).send();
-    Action.findById(id).then(action => {
-      if (!action)
-        return res.status(404).send();
-      res.status(200).send({action});
-    }).catch(err => {
-      res.status(400).send(err);
-    })
-}
-
-function patchAction(req, res)
-{
-    var id = req.params.id;
-    var body = _.pick(req.body, ['_id', 'todo', 'level', 'tags', 'actionType']);
-  
-    if (!ObjectID.isValid(id))
-      return res.status(400).send();
-    Action.findByIdAndUpdate(id, {$set: body}, {new: true}).then(action => {
+async function getActions(req, res) {
+    try {
+        const actions = await Action.find();
       
-      if (!action) {
-        return res.status(404).send();
-      }
-      res.status(200).send({action});
-    }).catch(err => res.status(400).send());
+        res.status(200).send({actions});
+    } catch (error) {
+        res.status(400).send(error);
+    }
 }
 
-function deleteAction(req, res)
-{
-    var id = req.params.id;
-    if (!ObjectID.isValid(id))
-      return res.status(404).send();
-    Action.findByIdAndDelete(id).then(action => {
-      if (!action)
-        return res.status(404).send();
-      res.status(200).send({action});
-    }).catch(err => res.status(400).send());
+async function getAction(req, res){
+    try {
+        var id = req.params.id;
+        
+        if (!ObjectID.isValid(id)) return res.status(404).send();
+
+        const action = await Action.findById(id);
+        
+        if (!action) return res.status(404).send();
+        
+        res.status(200).send({action});
+    } catch (error) {
+        res.status(400).send(error);
+    }
+}
+
+async function patchAction(req, res) {
+    try{
+        var id = req.params.id;
+        var body = _.pick(req.body, ['_id', 'todo', 'level', 'tags', 'actionType']);
+      
+        if (!ObjectID.isValid(id)) return res.status(400).send();
+        const action = await Action.findByIdAndUpdate(id, {$set: body}, {new: true});
+          
+        if (!action) return res.status(404).send();
+        res.status(200).send({action});
+    } catch (error) {
+        res.status(400).send(error);
+    }
+}
+
+async function deleteAction(req, res) {
+    try{
+        var id = req.params.id;
+        if (!ObjectID.isValid(id))
+          return res.status(404).send();
+        Action.findByIdAndDelete(id).then(action => {
+          if (!action)
+            return res.status(404).send();
+          res.status(200).send({action});
+        }).catch(err => res.status(400).send());
+    } catch (error) {
+        res.status(400).send(error);
+    }
 }
 
 exports.postAction    = postAction;

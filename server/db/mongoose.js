@@ -1,11 +1,25 @@
 const mongoose = require('mongoose');
 
-const password = encodeURIComponent('testtest6')
+const connUri = process.env.MONGO_LOCAL_CONN_URL;
 
-mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://test:'+password+'@ds263127.mlab.com:63127/heroku_1qqv03zk', { useNewUrlParser: true, useFindAndModify: false });
-mongoose.set('useCreateIndex', true);
-if (!(process.env.NODE_ENV === 'production')) {
-    mongoose.set('debug', true);
-}
+mongoose.promise = global.Promise;
+
+mongoose.connect(connUri, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+});
+
+const connection = mongoose.connection;
+
+connection.once('open', () => {
+  console.log('MongoDB -- database connection established successfully!');
+});
+
+connection.on('error', (err) => {
+  console.log('MongoDB connection error. Please make sure MongoDB is running. ' + err,);
+  console.log('Tried to connect with ', connUri);
+  process.exit();
+});
 module.exports = {mongoose};

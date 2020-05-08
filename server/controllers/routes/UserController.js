@@ -18,5 +18,5 @@ module.exports = function (app) {
     app.delete('/user/:id', User.deleteUser)
 
     // LOGIN /login
-    app.get('/login', User.getLogin)
+    app.get('/login', User.login)
 }

@@ -3,65 +3,67 @@ const _              = require('lodash');
 const { ObjectID }   = require('mongodb');
 
 
-function getActionTypes(req,res){
-   ActionType.find().then(actiontype => {
-      res.status(200).send({actiontype});
-   }).catch(err => {
-      res.status(400).send(err);
-   });
+async function getActionTypes(req,res){
+    try{
+        const actiontype = await ActionType.find();
+        res.status(200).send({actiontype});
+    } catch (error) {
+        res.status(400).send(error);
+    }
 }
 
-function postActionType(req,res){
-	var body = _.pick(req.body, ['name']);
-   var actionType = new ActionType(body);
+async function postActionType(req,res){
+    try{
+	    var body = _.pick(req.body, ['name']);
+        var actionType = new ActionType(body);
 
-   actionType.save().then(doc => {
-      res.status(201).send(doc);
-   }).catch(err => {
-      res.status(400).send(err);
-   })
+        const actiontype = await actionType.save();
+        res.status(201).send(actiontype);
+    } catch (error) {
+        res.status(400).send(error);
+    }
 }
 
-function deleteActionType(req, res)
-{
-   var id = req.params.id;
-   if (!ObjectID.isValid(id))
-      return res.status(404).send();
-   ActionType.findByIdAndDelete(id).then(actiontype => {
-      if (!actiontype)
-         return res.status(404).send();
-      res.status(204).send({actiontype});
-   }).catch(err => res.status(400).send());
+async function deleteActionType(req, res) {
+    try {
+        var id = req.params.id;
+        if (!ObjectID.isValid(id)) return res.status(404).send();
+        const actiontype = await ActionType.findByIdAndDelete(id);
+        if (!actiontype)
+            return res.status(404).send();
+        res.status(204).send({actiontype});
+    } catch (error) {
+        res.status(400).send(error);
+    }
 }
 
 
-function getActionType(req,res) {
-   var id = req.params.id;
-   if (!ObjectID.isValid(id))
-      return res.status(404).send();
-   ActionType.findById(id).then(actiontype => {
-      if (!actiontype)
-         return res.status(404).send();
-      res.status(200).send({actiontype});
-   }).catch(err => {
-      res.status(400).send(err);
-   })
+async function getActionType(req,res) {
+    try{
+        var id = req.params.id;
+        if (!ObjectID.isValid(id)) return res.status(404).send();
+        const actiontype = await ActionType.findById(id);
+        if (!actiontype) return res.status(404).send();
+        res.status(200).send({actiontype});
+    } catch (error) {
+        res.status(400).send(error);
+    }
 }
 
-function patchActionType(req, res)
-{
-   var id = req.params.id;
-   var body = _.pick(req.body, ['name']);
-  
-   if (!ObjectID.isValid(id))
-      return res.status(400).send();
-   ActionType.findByIdAndUpdate(id, {$set: body}, {new: true}).then(actionType => {
-      
-      if (!actionType) {
-        return res.status(404).send();
-      }
-      res.status(200).send({actionType});
-   }).catch(err => res.status(400).send());
+async function patchActionType(req, res) {
+    try{
+
+        var id = req.params.id;
+        var body = _.pick(req.body, ['name']);
+
+        if (!ObjectID.isValid(id)) return res.status(400).send();
+        ActionType.findByIdAndUpdate(id, {$set: body}, {new: true});
+
+        if (!actionType) return res.status(404).send();
+        res.status(200).send({actionType});
+    } catch (error) {
+        res.status(400).send(error);
+    }
 }
 
 exports.getActionTypes     = getActionTypes;
