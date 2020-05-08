@@ -6,7 +6,7 @@ module.exports = function (app) {
     app.post('/mission', Mission.postMission)
 
     // GET /missions
-    app.get('/missions', Mission.getMissions)
+    app.get('/mission/all', Mission.getMissions)
 
     // GET /mission/id
     app.get('/mission/:id', Mission.getMission)

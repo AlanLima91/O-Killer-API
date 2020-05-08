@@ -6,7 +6,7 @@ module.exports = function (app) {
     app.post('/user', User.addUser)
 
     // GET /users
-    app.get('/users', User.getUsers)
+    app.get('/user/all', User.getUsers)
 
     // GET /user/id
     app.get('/user/:id', User.getUser)

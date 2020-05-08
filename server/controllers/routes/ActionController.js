@@ -6,7 +6,7 @@ module.exports = function (app) {
     app.post('/action', Action.postAction)
 
     // GET /actions
-    app.get('/actions', Action.getActions)
+    app.get('/action/all', Action.getActions)
 
     // GET /action/id
     app.get('/action/:id', Action.getAction)

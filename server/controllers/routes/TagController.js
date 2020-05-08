@@ -4,7 +4,7 @@ module.exports = function (app) {
 
     app.post('/tag', Tag.postTag)
 
-    app.get('/tags', Tag.getTags)
+    app.get('/tag/all', Tag.getTags)
 
     app.get('/tag/:id', Tag.getTag)
 

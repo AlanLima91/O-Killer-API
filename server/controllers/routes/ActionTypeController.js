@@ -4,7 +4,7 @@ module.exports = function (app) {
 
     app.post('/actiontype', ActionType.postActionType)
 
-    app.get('/actiontypes', ActionType.getActionTypes)
+    app.get('/actiontype/all', ActionType.getActionTypes)
 
     app.get('/actiontype/:id', ActionType.getActionType)
 

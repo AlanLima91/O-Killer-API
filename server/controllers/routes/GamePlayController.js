@@ -2,7 +2,7 @@ const Gameplay  = require('../lib/gameplay');
 
 module.exports = function (app) {
 	
-	app.get('/gameplays', Gameplay.getGameplays);
+	app.get('/gameplay/all', Gameplay.getGameplays);
 
 	app.get('/gameplay/:id', Gameplay.getGameplay);
 

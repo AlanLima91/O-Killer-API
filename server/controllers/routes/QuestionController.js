@@ -4,7 +4,7 @@ module.exports = function (app) {
 
     app.post('/question', Question.postQuestion)
 
-    app.get('/questions', Question.getQuestions)
+    app.get('/question/all', Question.getQuestions)
 
     app.get('/question/:id', Question.getQuestion)
 
