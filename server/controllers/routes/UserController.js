@@ -2,8 +2,8 @@ const User  = require('../lib/user');
 
 module.exports = function (app) {
     
-    // POST /user
-    app.post('/user', User.addUser)
+    // POST /register
+    app.post('/register', User.addUser)
 
     // GET /users
     app.get('/user/all', User.getUsers)
@@ -18,5 +18,8 @@ module.exports = function (app) {
     app.delete('/user/:id', User.deleteUser)
 
     // LOGIN /login
-    app.get('/login', User.login)
+    app.post('/login', User.login)
+    
+    // LOGINJWT
+    app.post('/loginjwt', User.loginJWT)
 }

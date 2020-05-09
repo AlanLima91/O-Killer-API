@@ -1,7 +1,7 @@
 const mongoose  = require('mongoose');
 const _         = require('lodash');
 const bcrypt    = require('bcryptjs');
-
+const jwt = require('jsonwebtoken');
 var UserSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -17,10 +17,6 @@ var UserSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    alive: {
-        type: Boolean,
-        default: true,
-    },
     password: {
         type: String,
         required:true,
@@ -35,7 +31,7 @@ var UserSchema = new mongoose.Schema({
 UserSchema.methods.toJSON = function () {
     var user = this;
     var userObject = user.toObject();
-    return _.pick(userObject, ['_id','username', 'alive', 'password', 'tags']);
+    return _.pick(userObject, ['_id','username','email', 'password', 'tags']);
 }
 
 // mongoose middleware
