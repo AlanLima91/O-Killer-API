@@ -79,7 +79,12 @@ async function deleteUser(req, res) {
 
 async function login(req, res) {
     try {
-        const { password,username } = req.body;
+        const { password, username } = req.body;
+        
+        // Unhandleld previously.
+        if (!password || !username) {
+            return res.status(400).json({ message: 'Credentials missings' });
+        }
 
         let user = await User.findOne({ username: username });
         if (!user) return res.status(401).json({message: 'Mot de passe ou mail incorrect'});
