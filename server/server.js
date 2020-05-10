@@ -20,9 +20,12 @@ require('./controllers/controllersLoader')(app);
 app.get('/', (req, res) => {
     res.status(200).send('Server listening !')
 });
-app.get('*', function (req, res) {
-    res.status(401).send({ message: 'Unauthorized Access - No Token Provided!' })
-});
+
+// app.get('*', function (req, res) {
+//     console.log('middleWare')
+//     res.status(401).send({ message: 'Unauthorized Access - No Token Provided!' })
+// });
+
 app.use(express.static(__dirname + '/public'));
 
 app.listen(port, () => {
