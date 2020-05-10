@@ -1,18 +1,13 @@
-const Gameplay  = require('../lib/gameplay');
+const Gameplay = require('../lib/gameplay')
 
 module.exports = function (app) {
-	
-	app.get('/gameplay/all', Gameplay.getGameplays);
+  app.get('/gameplays', Gameplay.getGameplays)
 
-	app.get('/gameplay/:id', Gameplay.getGameplay);
+  app.get('/gameplays/:id', Gameplay.getGameplay)
 
-	app.get('/gameplay/:id/gamers', Gameplay.getGamers);
+  app.post('/gameplays', Gameplay.postGameplay)
 
-	app.post('/gameplay',Gameplay.postGameplay);
+  app.delete('/gameplays/:id', Gameplay.deleteGameplay)
 
-	app.delete('/gameplay/clear',Gameplay.deleteAllGameplay);
-
-	app.delete('/gameplay/:id', Gameplay.deleteGameplay);
-
-	app.patch('/gameplay/:id', Gameplay.patchGameplay);
+  app.patch('/gameplays/:id', Gameplay.patchGameplay)
 }

@@ -1,110 +1,125 @@
-const { Gameplay } = require('../../schema/gameplay');
-const _ = require('lodash');
-const { ObjectID } = require('mongodb');
-const User = require('./user');
+const { Gameplay } = require('../../schema/gameplay')
+const _ = require('lodash')
+const { ObjectID } = require('mongodb')
+const { getUserBearer } = require('../../utils')
 
-async function getGameplays(req, res) {
-    try {
-        const gamePlay = await Gameplay.find();
-        res.status(200).send({ gamePlay });
-    } catch (error) {
-        res.status(400).send(error);
-    }
+/**
+ * The goal here would be to retrieve all the gameplays with the current user in it.
+ * To do so, use the token retrieve the _id of the user in the gameplays.
+ * @param {*} req
+ * @param {*} res
+ */
+async function getGameplays (req, res) {
+  // Retrieve Id from token
+  const _id = getUserBearer(req).id
+  try {
+    // Search a gameplay for this User
+    Gameplay.find({ gamers: { $elemMatch: { $eq: _id } } }).then(gameplay => {
+      if (gameplay.length <= 0) {
+        // No gameplay for this user
+        return res.status(404).send({ message: 'No resultat found' })
+      }
+      // return all the gameplay for this user
+      return res.status(200).send(gameplay)
+    }).catch(e => {
+      console.log(e)
+      res.status(400).send({ message: 'Oops something went wrong' })
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(400).send({ message: 'Oops something went wrong' })
+  }
 }
 
-async function postGameplay(req, res) {
-    try {
-        var body = _.pick(req.body, ['name', 'duree', 'level', 'startTime', 'gamers']);
-
-        // let promise = getListNewUserId(req.body["nbJoueur"]);
-        // let gamers = [];
-        // let y = 0;
-        
-
-        // body.gamers = data;
-        // body.startTime = Date.now();
-
-        // var gameplay = new Gameplay(body);
-
-        // await gameplay.save();
-        res.status(201).send(true);
-    } catch (error) {
-        res.status(400).send(error);
-    }
+async function postGameplay (req, res) {
+  // const _id = getUserBearer(req).id
+  try {
+    // we construct the body of the gameplay
+    const body = _.pick(req.body, ['name', 'duree', 'level', 'startTime', 'gamers'])
+    // body.gamers = [_id]
+    body.status = 1
+    const gameplay = new Gameplay(body)
+    gameplay.save().then(gameplay, () => {
+      res.status(201).send(gameplay)
+    }).catch(e => {
+      console.log(e)
+      res.status(500).send({ message: 'Oops something went wrong' })
+    })
+  } catch (e) {
+    console.log(e)
+    res.status(500).send({ message: 'Oops something went wrong' })
+  }
 }
 
-async function deleteGameplay(req, res) {
-    try {
-        var id = req.params.id;
-        if (!ObjectID.isValid(id)) return res.status(404).send();
-
-        const gameplay = await Gameplay.findByIdAndDelete(id);
-        if (!gameplay) return res.status(404).send();
-
-        res.status(204).send({ gameplay });
-    } catch (error) {
-        res.status(400).send(error);
+async function deleteGameplay (req, res) {
+  try {
+    const id = req.params.id
+    if (!ObjectID.isValid(id)) {
+      return res.status(404).send()
     }
+    Gameplay.findByIdAndDelete(id).then(gameplay => {
+      if (!gameplay) {
+        return res.status(404).send()
+      }
+      res.status(204).send(gameplay)
+    }).catch(e => {
+      console.log(e)
+      res.status(500).send({ message: 'Oops something went wrong' })
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).send({ message: 'Oops something went wrong' })
+  }
 }
 
-async function deleteAllGameplay(req, res) {
-    try {
-        const gameplay = await Gameplay.deleteMany({});
-        if (!gameplay) return res.status(404).send();
-        res.status(204).send({ gameplay });
-    } catch (error) {
-        res.status(400).send(error);
+async function getGameplay (req, res) {
+  try {
+    var id = req.params.id
+    if (!ObjectID.isValid(id)) {
+      return res.status(404).send()
     }
+
+    Gameplay.findById(id).then(gameplay => {
+      if (!gameplay) {
+        return res.status(404).send()
+      }
+      res.status(200).send({ gameplay })
+    }).catch(e => {
+      console.log(e)
+      res.status(500).send({ message: 'Oops something went wrong' })
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).send({ message: 'Oops something went wrong' })
+  }
 }
 
-async function getGameplay(req, res) {
-    try {
-        var id = req.params.id;
-        if (!ObjectID.isValid(id)) return res.status(404).send();
-        
-        const gameplay = await Gameplay.findById(id);
-        if (!gameplay) return res.status(404).send();
+async function patchGameplay (req, res) {
+  try {
+    const id = req.params.id
+    const body = _.pick(req.body, ['name', 'duree', 'level', 'gamers'])
 
-        res.status(200).send({ gameplay });
-    } catch (error) {
-        res.status(400).send(error);
+    if (!ObjectID.isValid(id)) {
+      return res.status(400).send()
     }
+
+    Gameplay.findByIdAndUpdate(id, { $set: body }, { new: true }).then(gameplay => {
+      if (!gameplay) {
+        return res.status(404).send()
+      }
+      res.status(200).send(gameplay)
+    }).catch(e => {
+      console.log(e)
+      res.status(500).send({ message: 'Oops something went wrong' })
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).send({ message: 'Oops something went wrong' })
+  }
 }
 
-async function patchGameplay(req, res) {
-    try {
-        var id = req.params.id;
-        var body = _.pick(req.body, ['name', 'duree', 'level', 'gamers']);
-        if (!ObjectID.isValid(id)) return res.status(400).send();
-
-        const gameplay = await Gameplay.findByIdAndUpdate(id, { $set: body }, { new: true });
-        if (!gameplay) return res.status(404).send();
-        
-        res.status(200).send({ gameplay });
-    } catch (error) {
-        res.status(400).send(error);
-    }
-}
-
-async function getGamers(req, res) {
-    try {
-        var id = req.params.id;
-        if (!ObjectID.isValid(id)) return res.status(400).send();
-
-        const gameplay = await Gameplay.findById(id);
-        if (!gameplay) return res.status(404).send();
-        gameplay = gameplay.gamers
-
-        res.status(200).send({ gameplay });
-    } catch (error) {
-        res.status(400).send(error);
-    }
-}
-
-exports.getGameplays = getGameplays;
-exports.getGameplay = getGameplay;
-exports.getGamers = getGamers
-exports.postGameplay = postGameplay;
-exports.deleteGameplay = deleteGameplay;
-exports.patchGameplay = patchGameplay;
-exports.deleteAllGameplay = deleteAllGameplay;
+exports.getGameplays = getGameplays
+exports.getGameplay = getGameplay
+exports.postGameplay = postGameplay
+exports.deleteGameplay = deleteGameplay
+exports.patchGameplay = patchGameplay
