@@ -1,9 +1,11 @@
-var jwtDecode = require('jwt-decode');
+var jwtDecode = require('jwt-decode')
 
 const getUserBearer = (req) => {
-    if (req.header('authorization') === undefined) {return {id:undefined};}
-    user = jwtDecode(req.header('authorization'));
-    return user;
+  if (req.header('authorization') === undefined) {
+    return { id: undefined }
+  }
+
+  return jwtDecode(req.header('authorization'))
 }
 
-module.exports = { getUserBearer };
+module.exports = { getUserBearer }

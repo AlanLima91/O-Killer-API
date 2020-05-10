@@ -1,26 +1,26 @@
-const mongoose = require('mongoose');
-const _         = require('lodash');
+const mongoose = require('mongoose')
+const _ = require('lodash')
 
-var Schema = mongoose.Schema;
+var Schema = mongoose.Schema
 
 var QuestionSchema = new Schema([
-{
-    value:String,
+  {
+    value: String,
     tags: {
-        type:[String]
+      type: [String]
     },
-    answer:{
-        type:[String]
+    answer: {
+      type: [String]
     }
-}
-]);
+  }
+])
 
 // ** Méthodes d'instance **
 QuestionSchema.methods.toJSON = function () {
-    var question = this;
-    var questionObject = question.toObject();
-    return _.pick(questionObject, ['_id','value', 'tags', 'answer']);
+  var question = this
+  var questionObject = question.toObject()
+  return _.pick(questionObject, ['_id', 'value', 'tags', 'answer'])
 }
 
-var Question = mongoose.model("Question",QuestionSchema);
-module.exports = { Question };
+var Question = mongoose.model('Question', QuestionSchema)
+module.exports = { Question }
