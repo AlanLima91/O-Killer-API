@@ -13,6 +13,9 @@ async function getGameplays (req, res) {
   // Retrieve Id from token
   const _id = getUserBearer(req).id
   try {
+    if (!_id) {
+      return res.status(404).send({ message: 'No resultat found' })
+    }
     // Search a gameplay for this User
     Gameplay.find({ gamers: { $elemMatch: { $eq: _id } } }).then(gameplay => {
       if (gameplay.length <= 0) {
