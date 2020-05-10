@@ -4,7 +4,8 @@
     "description": "API O-Killer",
     "main": "server/server.js",
     "scripts": {
-        "start": "nodemon server/server.js"
+        "start": "nodemon server/server.js",
+        "test": "npx standard --fix"
     },
     "repository": {},
     "author": "Alexandre & Alan",
