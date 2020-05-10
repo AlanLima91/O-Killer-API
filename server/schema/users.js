@@ -27,17 +27,20 @@ var UserSchema = new mongoose.Schema({
     }
 },{timestamps: true})
 
-// ** Méthodes d'instance **
+/**
+ * Méthodes d'instance
+ */
 UserSchema.methods.toJSON = function () {
     var user = this;
     var userObject = user.toObject();
     return _.pick(userObject, ['_id','username','email', 'password', 'tags']);
 }
 
-// mongoose middleware
+/**
+ * mongoose middleware
+ */
 UserSchema.pre('save', function (next) {
     var user = this; //context binding
-
     // détecte l'insertion ou mise à jour d'un nouveau password
     if (user.isModified('password' || this.isNew)) {
         // cryptage
@@ -52,12 +55,19 @@ UserSchema.pre('save', function (next) {
     }
 })
 
+/**
+ * @param password the password to be compared.
+ * @return Promise
+ */
 UserSchema.methods.comparePassword = function(password) {
     let user = this;
     return bcrypt.compare(password, user.password);
 }
 
-
+/**
+ * returns a JWT Token.
+ * @return string the JWToken
+ */
 UserSchema.methods.generateJWT = function() {
     const today = new Date();
     const expirationDate = new Date(today);
@@ -74,6 +84,10 @@ UserSchema.methods.generateJWT = function() {
     });
 };
 
+/**
+ * check if JWToken is valid.
+ * @return boolean 
+ */
 UserSchema.methods.validateJWT = function(token) {
     try{
         const verified = jwt.verify(token, process.env.JWT_SECRET);
@@ -90,5 +104,6 @@ UserSchema.methods.validateJWT = function(token) {
         return false;
     }
 }
+
 var User = mongoose.model('User', UserSchema);
 module.exports = { User }

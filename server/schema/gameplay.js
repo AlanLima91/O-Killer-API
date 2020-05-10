@@ -27,8 +27,5 @@ GameplaySchema.methods.toJSON = function () {
     return _.pick(gameplayObject, ['_id', 'name', 'duree', 'startTime', 'level', 'gamers']);
 }
 
-
-
-
 var Gameplay = mongoose.model("Gameplay",GameplaySchema);
 module.exports = {Gameplay};
