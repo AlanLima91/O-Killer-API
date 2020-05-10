@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const connUri = process.env.MONGO_LOCAL_CONN_URL;
+const connUri = process.env.MONGODB_URI;
 
 mongoose.promise = global.Promise;
 
