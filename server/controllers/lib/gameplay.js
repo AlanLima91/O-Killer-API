@@ -9,13 +9,15 @@ const { getUserBearer } = require('../../utils')
  * @param {*} req
  * @param {*} res
  */
-async function getGameplays (req, res) {
+exports.getAll = async (req, res) => {
   // Retrieve Id from token
   const _id = getUserBearer(req).id
+
   try {
     if (!_id) {
       return res.status(404).send({ message: 'No resultat found' })
     }
+
     // Search a gameplay for this User
     Gameplay.find({ gamers: { $elemMatch: { $eq: _id } } }).then(gameplay => {
       if (gameplay.length <= 0) {
@@ -34,15 +36,16 @@ async function getGameplays (req, res) {
   }
 }
 
-async function postGameplay (req, res) {
-  // const _id = getUserBearer(req).id
+exports.post = async (req, res) => {
+  const _id = getUserBearer(req).id
   try {
     // we construct the body of the gameplay
     const body = _.pick(req.body, ['name', 'duree', 'level', 'startTime', 'gamers'])
-    // body.gamers = [_id]
+    body.gamers = [_id]
     body.status = 1
+
     const gameplay = new Gameplay(body)
-    gameplay.save().then(gameplay, () => {
+    gameplay.save().then(() => {
       res.status(201).send(gameplay)
     }).catch(e => {
       console.log(e)
@@ -54,7 +57,7 @@ async function postGameplay (req, res) {
   }
 }
 
-async function deleteGameplay (req, res) {
+exports.delete = async (req, res) => {
   try {
     const id = req.params.id
     if (!ObjectID.isValid(id)) {
@@ -75,7 +78,7 @@ async function deleteGameplay (req, res) {
   }
 }
 
-async function getGameplay (req, res) {
+exports.getOne = async (req, res) => {
   try {
     var id = req.params.id
     if (!ObjectID.isValid(id)) {
@@ -97,7 +100,7 @@ async function getGameplay (req, res) {
   }
 }
 
-async function patchGameplay (req, res) {
+exports.patch = async (req, res) => {
   try {
     const id = req.params.id
     const body = _.pick(req.body, ['name', 'duree', 'level', 'gamers'])
@@ -120,9 +123,3 @@ async function patchGameplay (req, res) {
     res.status(500).send({ message: 'Oops something went wrong' })
   }
 }
-
-exports.getGameplays = getGameplays
-exports.getGameplay = getGameplay
-exports.postGameplay = postGameplay
-exports.deleteGameplay = deleteGameplay
-exports.patchGameplay = patchGameplay

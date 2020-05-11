@@ -78,24 +78,33 @@ async function deleteUser (req, res) {
 
 async function login (req, res) {
   try {
-    const { password, username } = req.body
+    const { username, password } = req.body
 
     // Unhandleld previously.
     if (!password || !username) {
-      return res.status(400).json({ message: 'Credentials missings' })
+      return res.status(400).send({ message: 'Credentials missings' })
     }
 
+    // Looking for the user
     const user = await User.findOne({ username: username })
-    if (!user) return res.status(401).json({ message: 'Mot de passe ou mail incorrect' })
+    if (!user) {
+      return res.status(401).send({ message: 'Mot de passe ou mail incorrect' })
+    }
 
     // validate password
     const passwordValid = await user.comparePassword(password)
-    if (!passwordValid) return res.status(401).json({ message: 'Mot de passe ou mail incorrect' })
+    if (!passwordValid) {
+      return res.status(401).send({ message: 'Mot de passe ou mail incorrect' })
+    }
+
+    // clean credentials
     delete user.password
-    res.status(201).send({ token: user.generateJWT(), user: user })
+
+    // return token and user object
+    return res.status(200).send({ token: user.generateJWT(), user: user })
   } catch (error) {
     console.log(error)
-    res.status(400).send(error)
+    return res.status(500).send({ message: 'Error', detail: error })
   }
 };
 

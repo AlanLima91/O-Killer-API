@@ -1,13 +1,13 @@
 const Gameplay = require('../lib/gameplay')
 
 module.exports = function (app) {
-  app.get('/gameplays', Gameplay.getGameplays)
+  app.get('/gameplays', Gameplay.getAll)
 
-  app.get('/gameplays/:id', Gameplay.getGameplay)
+  app.get('/gameplays/:id', Gameplay.getOne)
 
-  app.post('/gameplays', Gameplay.postGameplay)
+  app.post('/gameplays', Gameplay.post)
 
-  app.delete('/gameplays/:id', Gameplay.deleteGameplay)
+  app.delete('/gameplays/:id', Gameplay.delete)
 
-  app.patch('/gameplays/:id', Gameplay.patchGameplay)
+  app.patch('/gameplays/:id', Gameplay.patch)
 }
