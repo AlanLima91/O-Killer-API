@@ -5,30 +5,26 @@ var GameplaySchema = new mongoose.Schema({
   name: {
     type: String
   },
-  duree: {
+  owner: {
+
+  },
+  duration: {
     type: String
   },
   startTime: {
     type: Date
   },
-  level: {
-    type: Number
-  },
-  gamers: {
-    type: [String]
-  },
-  status: {
-    type: Number,
-    enum: [1, 2, 3]
+  state: {
+    type: String,
+    enum: ['started', 'finished', 'pending']
   }
-}
-)
+}, { timestamps: true })
 
 // ** Méthodes d'instance **
 GameplaySchema.methods.toJSON = function () {
   var gameplay = this
   var gameplayObject = gameplay.toObject()
-  return _.pick(gameplayObject, ['_id', 'name', 'duree', 'startTime', 'level', 'gamers'])
+  return _.pick(gameplayObject, [])
 }
 
 var Gameplay = mongoose.model('Gameplay', GameplaySchema)

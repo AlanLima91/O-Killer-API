@@ -22,8 +22,8 @@ var UserSchema = new mongoose.Schema({
     required: true,
     max: 100
   },
-  tags: {
-    type: [String]
+  push_token: {
+
   }
 }, { timestamps: true })
 
@@ -33,7 +33,7 @@ var UserSchema = new mongoose.Schema({
 UserSchema.methods.toJSON = function () {
   var user = this
   var userObject = user.toObject()
-  return _.pick(userObject, ['_id', 'username', 'email', 'tags'])
+  return _.pick(userObject, ['_id', 'username', 'email'])
 }
 
 /**

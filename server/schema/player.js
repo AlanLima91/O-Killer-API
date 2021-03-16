@@ -1,18 +1,15 @@
 const mongoose = require('mongoose')
 
 var MissionSchema = new mongoose.Schema({
-  playerId: {
+  gameplayId: {
 
   },
-  targetId: {
+  userId: {
 
   },
-  missionPoolId: {
-
-  },
-  missionState: {
+  playerState: {
     type: String,
-    enum: ['succeed', 'in_progress', 'awaiting_for_validation', 'failed']
+    enum: ['alive', 'dead']
   }
 }, { timestamps: true })
 
