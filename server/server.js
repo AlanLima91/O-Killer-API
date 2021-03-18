@@ -4,10 +4,14 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const port = process.env.PORT || 8000
 const path = require('path')
+const passport = require('passport');
 
 var app = express()
 
 app.use(bodyParser.json())
+
+app.use(passport.initialize());
+require('./middlewares/jwt')(passport);
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
@@ -27,7 +31,6 @@ app.get('/', (req, res) => {
 //     res.status(401).send({ message: 'Unauthorized Access - No Token Provided!' })
 // })
 
-app.use(express.static(path.join(__dirname, '/public')))
 
 app.listen(port, () => {
   console.log('Listening on port ' + port)

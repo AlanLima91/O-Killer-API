@@ -1,11 +1,15 @@
 const mongoose = require('mongoose')
 
-var MissionSchema = new mongoose.Schema({
+var PlayerSchema = new mongoose.Schema({
   gameplayId: {
-
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'Gameplay'
   },
   userId: {
-
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'User'
   },
   playerState: {
     type: String,
@@ -13,5 +17,5 @@ var MissionSchema = new mongoose.Schema({
   }
 }, { timestamps: true })
 
-var Mission = mongoose.model('Mission', MissionSchema)
-module.exports = { Mission }
+var Player = mongoose.model('Player', PlayerSchema)
+module.exports = { Player }

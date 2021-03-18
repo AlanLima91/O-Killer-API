@@ -1,13 +1,12 @@
 const Gameplay = require('../lib/gameplay')
+const authentificate = require('../../middlewares/authentificate');
 
 module.exports = function (app) {
-  app.get('/gameplays', Gameplay.getAll)
+  app.get('/gameplays', authentificate, Gameplay.getAll)
 
-  app.get('/gameplays/:id', Gameplay.getOne)
+  app.put('/gameplays/new', authentificate, Gameplay.createGamePlay)
+  
+  app.post('/gameplays/joined', authentificate, Gameplay.joinGamePlay)
 
-  app.post('/gameplays', Gameplay.post)
-
-  app.delete('/gameplays/:id', Gameplay.delete)
-
-  app.patch('/gameplays/:id', Gameplay.patch)
+  app.post('/gameplays/started', authentificate, Gameplay.launchGamePlay)
 }

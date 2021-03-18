@@ -1,20 +1,20 @@
 const mongoose = require('mongoose')
 
 var MissionSchema = new mongoose.Schema({
-  playerId: {
+  // playerId: {
 
-  },
-  targetId: {
+  // },
+  // targetId: {
 
-  },
-  missionPoolId: {
+  // },
+  // missionPoolId: {
 
-  },
+  // },
   missionState: {
     type: String,
     enum: ['succeed', 'in_progress', 'awaiting_for_validation', 'failed']
   }
 }, { timestamps: true })
 
-var Mission = mongoose.model('Mission', MissionSchema)
+var Mission = mongoose.model('Missions', MissionSchema)
 module.exports = { Mission }

@@ -3,13 +3,20 @@ const _ = require('lodash')
 
 var GameplaySchema = new mongoose.Schema({
   name: {
-    type: String
+    type: String,
   },
   owner: {
-
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'User'
   },
   duration: {
     type: String
+  },
+  keyJoined: {
+    type: String,
+    unique:true,
+    index:true
   },
   startTime: {
     type: Date

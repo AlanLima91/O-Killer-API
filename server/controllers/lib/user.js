@@ -21,6 +21,7 @@ async function addUser (req, res) {
     delete user.password
     res.status(201).send(user)
   } catch (error) {
+    console.error(error);
     res.status(400).send(error)
   }
 }
@@ -88,13 +89,12 @@ async function login (req, res) {
     // Looking for the user
     const user = await User.findOne({ username: username })
     if (!user) {
-      return res.status(401).send({ message: 'Mot de passe ou mail incorrect' })
+      return res.status(401).send({ message: 'Mot de passe ou username incorrect' })
     }
-
     // validate password
     const passwordValid = await user.comparePassword(password)
     if (!passwordValid) {
-      return res.status(401).send({ message: 'Mot de passe ou mail incorrect' })
+      return res.status(401).send({ message: 'Mot de passe ou usernameee incorrect' })
     }
 
     // clean credentials

@@ -1,16 +1,16 @@
 const mongoose = require('mongoose')
 
 var MissionPoolSchema = new mongoose.Schema({
-  description: {
+  // description: {
 
-  },
-  missionPoolId: {
+  // },
+  // missionPoolId: {
 
-  },
-  duiration: {
+  // },
+  // duiration: {
 
-  }
+  // }
 }, { timestamps: true })
 
-var Mission = mongoose.model('MissionPool', MissionPoolSchema)
-module.exports = { Mission }
+var MissionPool = mongoose.model('MissionPool', MissionPoolSchema)
+module.exports = { MissionPool }
