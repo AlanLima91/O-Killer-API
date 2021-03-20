@@ -113,6 +113,7 @@ async function loginJWT (req, res) {
     const { token } = req.body
     const actifUser = getUserBearer(req)
     const user = await User.findById(actifUser.id, { password: 0 })
+    if(!user) return res.status(400).json({message:"Failed to connected"})
     const tokenValid = user.validateJWT(token)
     if (!tokenValid) return res.status(401).json({ message: 'Bad token' })
     res.status(201).send({ user: user })

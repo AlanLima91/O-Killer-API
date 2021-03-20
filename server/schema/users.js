@@ -23,7 +23,8 @@ var UserSchema = new mongoose.Schema({
     max: 100
   },
   push_token: {
-
+    type: String,
+    required: false,
   }
 }, { timestamps: true })
 
