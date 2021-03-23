@@ -38,28 +38,26 @@ UserSchema.methods.toJSON = function () {
 }
 
 /**
- * mongoose middleware
+ *  mongoose middleware
+ *  Update user password with hash if modified.
  */
 UserSchema.pre('save', function (next) {
-  var user = this // context binding
-  // détecte l'insertion ou mise à jour d'un nouveau password
+  var user = this
+
   if (user.isModified('password' || this.isNew)) {
-    // cryptage
+
     bcrypt.genSalt(10, (err, salt) => {
-      if (err) {
-        console.log(err)
-      }
+      if (err) { console.log(err) }
+
       bcrypt.hash(user.password, salt, (err, hash) => {
-        if (err) {
-          console.log(err)
-        }
+        if (err) { console.log(err) }
         user.password = hash
-        next()
       })
+
     })
-  } else {
-    next()
   }
+
+  next()
 })
 
 /**
@@ -100,14 +98,14 @@ UserSchema.methods.validateJWT = function (token) {
     const verified = jwt.verify(token, process.env.JWT_SECRET)
     const isValid = (
       verified.id === this._id.toString() &&
-            verified.email === this.email &&
-            verified.username === this.username
+      verified.email === this.email &&
+      verified.username === this.username
     )
+
     return isValid
   } catch (error) {
-    if (error.name === 'TokenExpiredError') {
-      return true
-    }
+    if (error.name === 'TokenExpiredError') { return true }
+
     return false
   }
 }

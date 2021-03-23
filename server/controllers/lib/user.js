@@ -53,10 +53,10 @@ async function getUser (req, res) {
 async function patchUser (req, res) {
   try {
     var id = req.params.id
-    var body = _.pick(req.body, ['username', 'password', 'tags'])
+    var body = _.pick(req.body, ['username', 'email', 'password', 'tags'])
     if (!ObjectID.isValid(id)) return res.status(400).send()
 
-    const user = await User.findByIdAndUpdate(id, { password: 0 }, { $set: body }, { new: true })
+    const user = await User.findByIdAndUpdate(id, { password: 0 }, { $set: body }, { new: false })
     if (!user) return res.status(404).send()
 
     res.status(200).send({ user })
@@ -83,7 +83,7 @@ async function login (req, res) {
 
     // Unhandleld previously.
     if (!password || !username) {
-      return res.status(400).send({ message: 'Credentials missings' })
+      return res.status(400).send({ message: 'Credentials missing' })
     }
 
     // Looking for the user
@@ -94,7 +94,7 @@ async function login (req, res) {
     // validate password
     const passwordValid = await user.comparePassword(password)
     if (!passwordValid) {
-      return res.status(401).send({ message: 'Mot de passe ou usernameee incorrect' })
+      return res.status(401).send({ message: 'Mot de passe ou username incorrect' })
     }
 
     // clean credentials
@@ -113,8 +113,10 @@ async function loginJWT (req, res) {
     const { token } = req.body
     const actifUser = getUserBearer(req)
     const user = await User.findById(actifUser.id, { password: 0 })
+  
     if(!user) return res.status(400).json({message:"Failed to connected"})
     const tokenValid = user.validateJWT(token)
+    
     if (!tokenValid) return res.status(401).json({ message: 'Bad token' })
     res.status(201).send({ user: user })
   } catch (error) {
