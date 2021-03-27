@@ -3,15 +3,15 @@ const _ = require('lodash');
 
 var MissionPoolSchema = new mongoose.Schema({
   name: {
-    type: string,
+    type: String,
     required: true,
   },
   description: {
-    type: string,
+    type: String,
     required: true,
   },
   duration: {
-    type: string,
+    type: String,
     enum: ['minutes', 'hours', 'days', 'weeks']
   }
 }, { timestamps: true });
